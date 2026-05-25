@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Test Game</title>
+  <style>
+    html,body{margin:0;height:100%;background:#0d0f0e;color:#f2f4f1;
+      font-family:system-ui,sans-serif;display:flex;align-items:center;justify-content:center}
+    #stage{text-align:center}
+    #dot{width:120px;height:120px;border-radius:50%;background:#9be600;margin:24px auto;cursor:pointer;
+      transition:transform .08s}
+    #dot:active{transform:scale(.9)}
+    h1{font-size:1.4rem}
+  </style>
+</head>
+<body>
+  <div id="stage">
+    <h1>Тестовая игра</h1>
+    <p>Кликов: <b id="score">0</b></p>
+    <div id="dot" role="button" aria-label="Жми"></div>
+    <p>Жми по кругу — это пайплайн-смоук-тест.</p>
+  </div>
+  <script>
+    var n = 0, s = document.getElementById('score');
+    document.getElementById('dot').addEventListener('click', function(){ s.textContent = ++n; });
+  </script>
+</body>
+</html>
