@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>Broadside</title>
+    <script src="./lib/playgama-bridge.js"></script>
+    <script type="module" crossorigin src="./assets/index-BaC_wNet.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-Zd9Aaeds.css">
+  </head>
+  <body>
+    <div id="game">
+      <canvas id="canvas"></canvas>
+    </div>
+    <div id="hud">
+      <div class="hud-top">
+        <div class="panel hp-block"><span class="label">HULL</span><div class="hp-bar"><div class="hp-fill"></div></div><div class="boons-strip"></div></div>
+        <div class="panel wave-block"><span class="label">WAVE</span><span class="wave-num">1</span><div class="wave-progress"><div class="wave-progress-fill"></div></div><span class="wave-best">Best: <span class="hud-best-wave">—</span></span></div>
+        <div class="panel wind-block"><span class="label">WIND</span><div class="wind-arrow-wrap"><span class="wind-arrow" data-icon="windArrow"></span></div></div>
+        <div class="panel compass-block">
+          <span class="label">CONTACTS</span>
+          <div class="compass">
+            <svg class="compass-ring" viewBox="-50 -50 100 100">
+              <circle cx="0" cy="0" r="42" fill="rgba(20,14,6,0.55)" stroke="#2a1a0a" stroke-width="1"/>
+              <text x="0" y="-32" text-anchor="middle" fill="#c9a24b" font-family="Cinzel" font-size="9" font-weight="800">N</text>
+              <circle cx="0" cy="0" r="3" fill="#c9a24b"/>
+              <path d="M 0 -8 L -3 4 L 3 4 Z" fill="#c9a24b"/>
+            </svg>
+            <div class="compass-marks"></div>
+          </div>
+        </div>
+      </div>
+      <div class="hud-bottom">
+        <div class="sector-ui">
+          <div class="sector port"><div class="sector-fill"></div></div>
+          <div class="sector starboard"><div class="sector-fill"></div></div>
+          <div class="sector bow"><div class="sector-fill"></div></div>
+          <div class="sector-hub"><img class="hub-icon" src="./assets/ui/cannon_hub.png" alt=""/></div>
+        </div>
+      </div>
+      <div id="touch-stick-zone" class="touch-zone">
+        <div id="joystick-base" class="hidden"><div class="joystick-knob"></div></div>
+      </div>
+      <button id="fire-btn">FIRE</button>
+      <div id="enemy-hp-layer"></div>
+      <div id="popup-layer"></div>
+      <div id="marker-layer"></div>
+      <div id="kill-feed"></div>
+      <div id="hit-flash"></div>
+      <div id="save-toast" class="save-toast hidden"></div>
+      <div class="hud-controls">
+        <button class="ctrl-btn" id="mute-btn" aria-label="Mute"><span class="ctrl-icon" data-icon="sound"></span></button>
+        <button class="ctrl-btn" id="pause-btn" aria-label="Pause"><span class="ctrl-icon" data-icon="pause"></span></button>
+      </div>
+    </div>
+
+    <div id="overlay-pause" class="overlay hidden">
+      <div class="panel overlay-panel">
+        <h2 class="pause-title">PAUSED</h2>
+        <div class="pause-rows">
+          <div class="pause-row"><span class="pause-label sfx-label">Sound</span><button class="toggle-btn" id="toggle-sfx"><span class="toggle-state"></span></button></div>
+          <div class="pause-row"><span class="pause-label music-label">Music</span><button class="toggle-btn" id="toggle-music"><span class="toggle-state"></span></button></div>
+        </div>
+        <button class="btn-primary" id="resume-btn">RESUME</button>
+        <button class="btn-secondary" id="quit-btn">QUIT TO MENU</button>
+      </div>
+    </div>
+
+    <div id="overlay-upgrade" class="overlay hidden">
+      <div class="panel overlay-panel">
+        <h2>CHOOSE A BOON</h2>
+        <div class="upgrade-options"></div>
+        <div class="reward-slot">
+          <button class="btn-rewarded hidden" id="extra-boon-btn"><span class="rw-icon"></span><span class="rw-text">+1 BOON</span></button>
+          <div class="bonus-card hidden" id="bonus-card">
+            <span class="bonus-ribbon"></span>
+            <span class="bonus-icon"></span>
+            <span class="bonus-text">
+              <span class="bonus-title"></span>
+              <span class="bonus-desc"></span>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="overlay-tutorial" class="overlay hidden">
+      <div class="panel overlay-panel">
+        <h2 class="t-title"></h2>
+        <div class="tutorial-rows">
+          <div class="tut-row"><span class="tut-icon" data-icon="target"></span><span class="t-fire"></span></div>
+          <div class="tut-row tut-kbd"><span class="tut-icon" data-icon="keyboard"></span><span class="t-steer-kbd"></span></div>
+          <div class="tut-row tut-touch"><span class="tut-icon" data-icon="phone"></span><span class="t-steer-touch"></span></div>
+          <div class="tut-row"><span class="tut-icon" data-icon="anchor"></span><span class="t-aim"></span></div>
+        </div>
+        <button class="btn-primary" id="tutorial-start"></button>
+      </div>
+    </div>
+
+    <div id="hint-bar"></div>
+
+    <div id="overlay-gameover" class="overlay hidden">
+      <div class="panel overlay-panel">
+        <h2>SUNK</h2>
+        <p class="result-line">Reached wave <span class="final-wave">1</span></p>
+        <p class="best-line" style="margin-bottom: 14px; font-size: 14px; opacity: 0.8;">Best: <span class="best-wave">1</span></p>
+        <div class="btn-row">
+          <button class="btn-rewarded hidden" id="respawn-btn"><span class="rw-icon"></span><span class="rw-text">RESPAWN</span></button>
+          <button class="btn-primary" id="restart-btn">NEW RUN</button>
+          <button class="btn-secondary" id="leaderboard-btn">LEADERBOARD</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="overlay-leaderboard" class="overlay hidden">
+      <div class="panel overlay-panel lb-panel">
+        <h2 class="lb-title">LEADERBOARD</h2>
+        <div class="lb-list"></div>
+        <button class="btn-primary" id="leaderboard-close">CLOSE</button>
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://bridge.playgama.com/v1.30.0/schema.json",
+  "advertisement": {
+    "interstitial": {
+      "preloadOnStart": true,
+      "placements": []
+    },
+    "rewarded": {
+      "preloadOnStart": true,
+      "placements": []
+    },
+    "useBuiltInErrorPopup": true
+  },
+  "payments": [],
+  "leaderboards": [
+    {
+      "id": "waves_reached",
+      "name": { "en": "Waves Reached", "ru": "Достигнутые волны", "de": "Erreichte Wellen", "es": "Oleadas alcanzadas" }
+    }
+  ]
+}
